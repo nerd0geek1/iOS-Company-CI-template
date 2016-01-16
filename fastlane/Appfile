@@ -1,0 +1,9 @@
+for_lane :beta do
+  app_identifier 'RELEASE_BUILD BUNDLE IDENTIFIER'
+end
+
+for_lane :crashlytics do
+  app_identifier 'ADHOC BUILD BUNDLE IDENTIFIER'
+end
+
+apple_id 'YOUR APPLE ACCOUNT MAILADDRESS'

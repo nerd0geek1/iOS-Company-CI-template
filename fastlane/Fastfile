@@ -1,0 +1,49 @@
+fastlane_version "1.48.0"
+
+default_platform :ios
+
+TEST_SCHEME           = ''
+TEST_CONFIGURATION    = ''
+RELEASE_SCHEME        = ''
+RELEASE_CONFIGURATION = ''
+ADHOC_SCHEME          = ''
+ADHOC_CONFIGURATION   = ''
+
+CRASHLYTICS_IPA_PATH      = ''
+CRASHLYTICS_NOTES_PATH    = ''
+CRASHLYTICS_API_KEY       = ENV['CRASHLYTICS_API_KEY']
+CRASHLYTICS_BUILD_SECRET  = ENV['CRASHLYTICS_BUILD_SECRET']
+CRASHLYTICS_GROUP_ALIAS   = ENV['CRASHLYTICS_GROUP_ALIAS']
+
+platform :ios do
+  desc 'setup libraries'
+  lane :setup do
+    cocoapods
+    carthage
+  end
+
+  desc 'Runs all the tests'
+  lane :test do
+    scan(scheme: TEST_SCHEME, configuration: TEST_CONFIGURATION)
+  end
+
+  desc 'Submit a new Beta to iTunes Connect'
+  lane :beta do
+    sigh(skip_install: true, skip_certificate_verification: true)
+    gym(scheme: RELEASE_SCHEME, configuration: RELEASE_CONFIGURATION)
+    pilot(skip_submission: true)
+  end
+
+  desc 'Distribute a new version to Crashlytics'
+  lane :crashlytics do
+    sigh(adhoc: true, skip_install: true, skip_certificate_verification: true)
+    gym(scheme: ADHOC_SCHEME, configuration: ADHOC_CONFIGURATION, use_legacy_build_api: true)
+    crashlytics(
+      api_token:        CRASHLYTICS_API_KEY,
+      build_secret:     CRASHLYTICS_BUILD_SECRET,
+      ipa_path:         CRASHLYTICS_IPA_PATH,
+      notes_path:       CRASHLYTICS_NOTES_PATH,
+      groups:           CRASHLYTICS_GROUP_ALIAS
+    )
+  end
+end
