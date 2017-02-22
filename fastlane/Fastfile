@@ -27,15 +27,15 @@ platform :ios do
     scan(scheme: TEST_SCHEME, configuration: TEST_CONFIGURATION)
   end
 
-  desc 'Submit a new Beta to iTunes Connect'
-  lane :beta do
+  desc 'Submit a new ipa file to iTunes Connect'
+  lane :deploy do
     sigh(skip_install: true, skip_certificate_verification: true)
     gym(scheme: RELEASE_SCHEME, configuration: RELEASE_CONFIGURATION)
     pilot(skip_submission: true)
   end
 
-  desc 'Distribute a new version to Crashlytics'
-  lane :crashlytics do
+  desc 'Distribute new ipa via beta app distribution service'
+  lane :beta do
     sigh(adhoc: true, skip_install: true, skip_certificate_verification: true)
     gym(scheme: ADHOC_SCHEME, configuration: ADHOC_CONFIGURATION, use_legacy_build_api: true)
     crashlytics(

@@ -19,12 +19,12 @@ deployment:
     branch: master
     commands:
       - bundle exec rake build:prepare
-      - bundle exec fastlane beta
+      - bundle exec fastlane deploy
       - bundle exec rake build:save
 
   crashlytics:
     branch: develop
     commands:
       - bundle exec rake build:prepare
-      - bundle exec fastlane crashlytics
+      - bundle exec fastlane beta
       - bundle exec rake build:save

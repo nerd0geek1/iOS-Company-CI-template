@@ -1,8 +1,8 @@
-for_lane :beta do
+for_lane :deploy do
   app_identifier 'RELEASE_BUILD BUNDLE IDENTIFIER'
 end
 
-for_lane :crashlytics do
+for_lane :beta do
   app_identifier 'ADHOC BUILD BUNDLE IDENTIFIER'
 end
 
