@@ -9,6 +9,9 @@ RELEASE_CONFIGURATION = ''
 ADHOC_SCHEME          = ''
 ADHOC_CONFIGURATION   = ''
 
+INFO_PLIST_FILE_PATH  = ''
+BUILD_NUMBER          = ENV['CIRCLE_BUILD_NUM']
+
 CRASHLYTICS_IPA_PATH      = ''
 CRASHLYTICS_NOTES_PATH    = ''
 CRASHLYTICS_API_KEY       = ENV['CRASHLYTICS_API_KEY']
@@ -18,32 +21,40 @@ CRASHLYTICS_GROUP_ALIAS   = ENV['CRASHLYTICS_GROUP_ALIAS']
 platform :ios do
   desc 'setup libraries'
   lane :setup do
-    cocoapods
-    carthage
+    set_info_plist_value(path: INFO_PLIST_FILE_PATH, key: 'CFBundleVersion', value: BUILD_NUMBER) #updating build number
+    cocoapods # execute if your project use CocoaPods and your repo does not include Pods directory
+    carthage  # execute if your project use Carthage and your repo does not including Carthage/ directory
   end
 
   desc 'Runs all the tests'
   lane :test do
-    scan(scheme: TEST_SCHEME, configuration: TEST_CONFIGURATION)
+    scan(scheme: TEST_SCHEME,
+         configuration: TEST_CONFIGURATION,
+         device: 'iPhone 6 Plus (9.0)',
+         clean: true)
   end
 
   desc 'Submit a new ipa file to iTunes Connect'
   lane :deploy do
-    sigh(skip_install: true, skip_certificate_verification: true)
-    gym(scheme: RELEASE_SCHEME, configuration: RELEASE_CONFIGURATION)
-    pilot(skip_submission: true)
+    sigh(skip_certificate_verification: true)
+    gym(scheme: RELEASE_SCHEME,
+        configuration: RELEASE_CONFIGURATION,
+        clean: true)
+    pilot(skip_submission: true,
+          skip_waiting_for_build_processing: true)
   end
 
   desc 'Distribute new ipa via beta app distribution service'
   lane :beta do
-    sigh(adhoc: true, skip_install: true, skip_certificate_verification: true)
-    gym(scheme: ADHOC_SCHEME, configuration: ADHOC_CONFIGURATION, use_legacy_build_api: true)
-    crashlytics(
-      api_token:        CRASHLYTICS_API_KEY,
-      build_secret:     CRASHLYTICS_BUILD_SECRET,
-      ipa_path:         CRASHLYTICS_IPA_PATH,
-      notes_path:       CRASHLYTICS_NOTES_PATH,
-      groups:           CRASHLYTICS_GROUP_ALIAS
+    sigh(adhoc: true, skip_certificate_verification: true)
+    gym(scheme: ADHOC_SCHEME,
+        configuration: ADHOC_CONFIGURATION,
+        export_method: "ad-hoc")
+    crashlytics(api_token:        CRASHLYTICS_API_KEY,
+                build_secret:     CRASHLYTICS_BUILD_SECRET,
+                ipa_path:         CRASHLYTICS_IPA_PATH,
+                notes_path:       CRASHLYTICS_NOTES_PATH,
+                groups:           CRASHLYTICS_GROUP_ALIAS
     )
   end
 end
