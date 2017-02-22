@@ -18,7 +18,6 @@ deployment:
   iTunesConnect:
     branch: master
     commands:
-      - bundle exec rake build:prepare
       - bundle exec fastlane deploy
       - bundle exec rake build:save
 
