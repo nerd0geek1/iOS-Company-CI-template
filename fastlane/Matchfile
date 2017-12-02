@@ -1,0 +1,10 @@
+git_url "CERTIFICATE_AND_PROFILE_REPOSITORY_URL"
+
+for_lane :beta do
+  type 'adhoc'
+end
+
+for_lane :deploy do
+  type 'appstore'
+end
+

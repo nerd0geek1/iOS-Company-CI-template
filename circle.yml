@@ -8,8 +8,7 @@ dependencies:
   cache_directories:
     - 'vendor/bundle'
   override:
-    - bundle install -j4 --path=vendor/bundle
-    - bundle exec rake security:add_key
+    - bundle install --path=vendor/bundle
     - bundle exec fastlane setup
 test:
   override:
