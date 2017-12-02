@@ -34,16 +34,6 @@ platform :ios do
          clean: true)
   end
 
-  desc 'Submit a new ipa file to iTunes Connect'
-  lane :deploy do
-    sigh(skip_certificate_verification: true)
-    gym(scheme: RELEASE_SCHEME,
-        configuration: RELEASE_CONFIGURATION,
-        clean: true)
-    pilot(skip_submission: true,
-          skip_waiting_for_build_processing: true)
-  end
-
   desc 'Distribute new ipa via beta app distribution service'
   lane :beta do
     sigh(adhoc: true, skip_certificate_verification: true)
@@ -56,5 +46,15 @@ platform :ios do
                 notes_path:       CRASHLYTICS_NOTES_PATH,
                 groups:           CRASHLYTICS_GROUP_ALIAS
     )
+  end
+
+  desc 'Submit a new ipa file to iTunes Connect'
+  lane :deploy do
+    sigh(skip_certificate_verification: true)
+    gym(scheme: RELEASE_SCHEME,
+        configuration: RELEASE_CONFIGURATION,
+        clean: true)
+    pilot(skip_submission: true,
+          skip_waiting_for_build_processing: true)
   end
 end
