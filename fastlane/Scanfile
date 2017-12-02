@@ -1,0 +1,3 @@
+scheme "TEST_BUILD_SCHEME"
+
+clean true

@@ -2,9 +2,6 @@ fastlane_version "1.48.0"
 
 default_platform :ios
 
-TEST_SCHEME           = ''
-TEST_CONFIGURATION    = ''
-
 INFO_PLIST_FILE_PATH  = ''
 BUILD_NUMBER          = ENV['CIRCLE_BUILD_NUM']
 
@@ -24,10 +21,7 @@ platform :ios do
 
   desc 'Runs all the tests'
   lane :test do
-    scan(scheme: TEST_SCHEME,
-         configuration: TEST_CONFIGURATION,
-         device: 'iPhone 6 Plus (9.0)',
-         clean: true)
+    scan
   end
 
   desc 'Distribute new ipa via beta app distribution service'
