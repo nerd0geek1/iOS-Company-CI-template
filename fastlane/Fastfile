@@ -13,13 +13,6 @@ CRASHLYTICS_BUILD_SECRET  = ENV['CRASHLYTICS_BUILD_SECRET']
 CRASHLYTICS_GROUP_ALIAS   = ENV['CRASHLYTICS_GROUP_ALIAS']
 
 platform :ios do
-  desc 'setup libraries'
-  lane :setup do
-    set_info_plist_value(path: INFO_PLIST_FILE_PATH, key: 'CFBundleVersion', value: BUILD_NUMBER) #updating build number
-    cocoapods # execute if your project use CocoaPods and your repo does not include Pods directory
-    carthage  # execute if your project use Carthage and your repo does not including Carthage/ directory
-  end
-
   desc 'Runs all the tests'
   lane :test do
     scan
@@ -27,6 +20,7 @@ platform :ios do
 
   desc 'Distribute new ipa via beta app distribution service'
   lane :beta do
+    set_info_plist_value(path: INFO_PLIST_FILE_PATH, key: 'CFBundleVersion', value: BUILD_NUMBER) if !BUILD_NUMBER.nil?
     match
     gym
     copy_artifacts(target_path: ARTIFACTS_PATH, artifacts: ["*.ipa", "*.dsym.zip"])
@@ -39,6 +33,7 @@ platform :ios do
 
   desc 'Submit a new ipa file to iTunes Connect'
   lane :deploy do
+    set_info_plist_value(path: INFO_PLIST_FILE_PATH, key: 'CFBundleVersion', value: BUILD_NUMBER) if !BUILD_NUMBER.nil?
     match
     gym
     copy_artifacts(target_path: ARTIFACTS_PATH, artifacts: ["*.ipa", "*.dsym.zip"])

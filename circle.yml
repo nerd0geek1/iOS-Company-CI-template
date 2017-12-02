@@ -9,7 +9,6 @@ dependencies:
     - 'vendor/bundle'
   override:
     - bundle install --path=vendor/bundle
-    - bundle exec fastlane setup
 test:
   override:
     - bundle exec fastlane test
