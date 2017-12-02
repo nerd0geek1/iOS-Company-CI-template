@@ -1,0 +1,73 @@
+version: 2
+
+jobs:
+  build:
+    macos:
+      xcode: '9.1.0'
+    shell: /bin/bash --login -eo pipefail
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+          - v1-gems-{{ checksum "Gemfile.lock" }}
+          - v1-gems-
+      - run:
+          name: install rubygems via Bundler
+          command: bundle install --path vendor/bundle
+      - save_cache:
+          key: v1-gems-{{ checksum "Gemfile.lock" }}
+          paths:
+            - vendor/bundle
+      - run:
+          name: run unit testing
+          command: bundle exec fastlane test
+  beta:
+    macos:
+      xcode: '9.1.0'
+    shell: /bin/bash --login -eo pipefail
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+          - v1-gems-{{ checksum "Gemfile.lock" }}
+          - v1-gems-
+      - run:
+          name: install rubygems via Bundler
+          command: bundle install --path vendor/bundle
+      - run:
+          name: distribute beta build to in-house users
+          command: bundle exec fastlane beta
+  deploy:
+    macos:
+      xcode: '9.1.0'
+    shell: /bin/bash --login -eo pipefail
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+          - v1-gems-{{ checksum "Gemfile.lock" }}
+          - v1-gems-
+      - run:
+          name: install rubygems via Bundler
+          command: bundle install --path vendor/bundle
+      - run:
+          name: deploy ipa file to iTunes Connect
+          command: bundle exec fastlane deploy
+
+workflows:
+  version: 2
+  build-and-deploy:
+    jobs:
+      - build
+      - beta:
+          requires:
+            - build
+          filters:
+            branches:
+              only: develop
+      - deploy:
+          requires:
+            - build
+          filters:
+            branches:
+              only: master
