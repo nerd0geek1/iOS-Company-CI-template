@@ -1,9 +1,9 @@
-for_lane :deploy do
-  app_identifier 'RELEASE_BUILD BUNDLE IDENTIFIER'
-end
-
 for_lane :beta do
-  app_identifier 'ADHOC BUILD BUNDLE IDENTIFIER'
+  app_identifier 'ADHOC_BUILD_BUNDLE_IDENTIFIER'
 end
 
-apple_id 'YOUR APPLE ACCOUNT MAILADDRESS'
+for_lane :release do
+  app_identifier 'RELEASE_BUILD_BUNDLE_IDENTIFIER'
+end
+
+apple_id 'YOUR_APPLE_ACCOUNT_MAILADDRESS'
