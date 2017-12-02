@@ -13,6 +13,10 @@ CRASHLYTICS_BUILD_SECRET  = ENV['CRASHLYTICS_BUILD_SECRET']
 CRASHLYTICS_GROUP_ALIAS   = ENV['CRASHLYTICS_GROUP_ALIAS']
 
 platform :ios do
+  before_all do
+    setup_circle_ci
+  end
+
   desc 'Runs all the tests'
   lane :test do
     scan
