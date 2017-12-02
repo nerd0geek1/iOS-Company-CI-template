@@ -1,0 +1,7 @@
+for_lane :beta do
+  scheme "ADHOC_BUILD_SCHEME"
+end
+
+for_lane :deploy do
+  scheme "RELEASE_BUILD_SCHEME"
+end
