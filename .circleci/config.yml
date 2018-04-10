@@ -3,7 +3,7 @@ version: 2
 jobs:
   build:
     macos:
-      xcode: '9.1.0'
+      xcode: '9.3.0'
     shell: /bin/bash --login -eo pipefail
     steps:
       - checkout
@@ -23,7 +23,7 @@ jobs:
           command: bundle exec fastlane test
   beta:
     macos:
-      xcode: '9.1.0'
+      xcode: '9.3.0'
     shell: /bin/bash --login -eo pipefail
     steps:
       - checkout
@@ -39,7 +39,7 @@ jobs:
           command: bundle exec fastlane beta
   deploy:
     macos:
-      xcode: '9.1.0'
+      xcode: '9.3.0'
     shell: /bin/bash --login -eo pipefail
     steps:
       - checkout
