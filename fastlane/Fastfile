@@ -5,8 +5,6 @@ default_platform :ios
 INFO_PLIST_FILE_PATH  = ''
 BUILD_NUMBER          = ENV['CIRCLE_BUILD_NUM']
 
-ARTIFACTS_PATH = ENV['CIRCLE_ARTIFACTS']
-
 CRASHLYTICS_IPA_PATH      = ''
 CRASHLYTICS_API_KEY       = ENV['CRASHLYTICS_API_KEY']
 CRASHLYTICS_BUILD_SECRET  = ENV['CRASHLYTICS_BUILD_SECRET']
@@ -27,7 +25,6 @@ platform :ios do
     set_info_plist_value(path: INFO_PLIST_FILE_PATH, key: 'CFBundleVersion', value: BUILD_NUMBER) if !BUILD_NUMBER.nil?
     match
     gym
-    copy_artifacts(target_path: ARTIFACTS_PATH, artifacts: ["*.ipa", "*.dsym.zip"])
     crashlytics(api_token:    CRASHLYTICS_API_KEY,
                 build_secret: CRASHLYTICS_BUILD_SECRET,
                 ipa_path:     CRASHLYTICS_IPA_PATH,
@@ -40,7 +37,6 @@ platform :ios do
     set_info_plist_value(path: INFO_PLIST_FILE_PATH, key: 'CFBundleVersion', value: BUILD_NUMBER) if !BUILD_NUMBER.nil?
     match
     gym
-    copy_artifacts(target_path: ARTIFACTS_PATH, artifacts: ["*.ipa", "*.dsym.zip"])
     pilot(skip_submission: true,
           skip_waiting_for_build_processing: true)
   end
