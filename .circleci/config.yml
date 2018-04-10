@@ -9,18 +9,13 @@ jobs:
       - checkout
       - restore_cache:
           keys:
-          - v1-gems-{{ checksum "Gemfile.lock" }}
-          - v1-gems-
-      - run:
-          name: install rubygems via Bundler
-          command: bundle install --path vendor/bundle
+          - gem-cache-{{ arch }}-{{ checksum "Gemfile.lock" }}
+      - run: bundle install --path vendor/bundle
       - save_cache:
-          key: v1-gems-{{ checksum "Gemfile.lock" }}
+          key: gem-cache-{{ arch }}-{{ checksum "Gemfile.lock" }}
           paths:
             - vendor/bundle
-      - run:
-          name: run unit testing
-          command: bundle exec fastlane test
+      - run: bundle exec fastlane test
   beta:
     macos:
       xcode: '9.3.0'
@@ -29,11 +24,12 @@ jobs:
       - checkout
       - restore_cache:
           keys:
-          - v1-gems-{{ checksum "Gemfile.lock" }}
-          - v1-gems-
-      - run:
-          name: install rubygems via Bundler
-          command: bundle install --path vendor/bundle
+          - gem-cache-{{ arch }}-{{ checksum "Gemfile.lock" }}
+      - run: bundle install --path vendor/bundle
+      - save_cache:
+          key: gem-cache-{{ arch }}-{{ checksum "Gemfile.lock" }}
+          paths:
+            - vendor/bundle
       - run:
           name: distribute beta build to in-house users
           command: bundle exec fastlane beta
@@ -45,11 +41,12 @@ jobs:
       - checkout
       - restore_cache:
           keys:
-          - v1-gems-{{ checksum "Gemfile.lock" }}
-          - v1-gems-
-      - run:
-          name: install rubygems via Bundler
-          command: bundle install --path vendor/bundle
+          - gem-cache-{{ arch }}-{{ checksum "Gemfile.lock" }}
+      - run: bundle install --path vendor/bundle
+      - save_cache:
+          key: gem-cache-{{ arch }}-{{ checksum "Gemfile.lock" }}
+          paths:
+            - vendor/bundle
       - run:
           name: deploy ipa file to iTunes Connect
           command: bundle exec fastlane deploy
