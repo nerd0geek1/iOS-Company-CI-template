@@ -5,7 +5,7 @@ aliases:
   - &build-machine
     macos:
       xcode: '9.4.0'
-    shell: /bin/bash --login -eo pipefail
+    shell: /bin/bash --login -o pipefail
   # ruby gems
   - &restore-gem-cache
     keys:
@@ -22,12 +22,18 @@ aliases:
     path: "<PRODUCT NAME>".ipa
   - &dsym-artifacts
     path: "<PRODUCT NAME>".app.dSYM.zip
+  # others
+  - &set-ruby-version
+    name: Set ruby version
+    command: |
+      cp .ruby-version.ci .ruby-version
 
 jobs:
   build:
     <<: *build-machine
     steps:
       - checkout
+      - run: *set-ruby-version
       - restore_cache: *restore-gem-cache
       - run: *install-gems
       - save_cache: *save-gem-cache
@@ -36,6 +42,7 @@ jobs:
     <<: *build-machine
     steps:
       - checkout
+      - run: *set-ruby-version
       - restore_cache: *restore-gem-cache
       - run: *install-gems
       - save_cache: *save-gem-cache
@@ -48,6 +55,7 @@ jobs:
     <<: *build-machine
     steps:
       - checkout
+      - run: *set-ruby-version
       - restore_cache: *restore-gem-cache
       - run: *install-gems
       - save_cache: *save-gem-cache
